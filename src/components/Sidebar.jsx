@@ -28,7 +28,7 @@ export default function Sidebar({ active, onNav }) {
         <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.3px' }}>
           🤖 Agent Manager
         </div>
-        <div style={{ fontSize: 11, color: 'var(--text3)', marginTop: 2 }}>devbox ai · claude</div>
+        <div style={{ fontSize: 11, color: 'var(--text3)', marginTop: 2 }}>Claude Code</div>
       </div>
 
       {/* Nav */}

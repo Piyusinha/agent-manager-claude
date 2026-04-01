@@ -49,23 +49,12 @@ export default function Dashboard() {
           <h3 style={{ marginBottom: 14, fontSize: 15, fontWeight: 600 }}>Environment</h3>
           {config.loading ? <Spinner /> : config.error ? <ErrorMsg msg={config.error} /> : (
             <div>
-              {Object.entries(config.data || {}).filter(([k]) => k !== 'devboxConfig').map(([k, v]) => (
+              {Object.entries(config.data || {}).map(([k, v]) => (
                 <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)', fontSize: 13 }}>
                   <span style={{ color: 'var(--text3)' }}>{k}</span>
                   <span style={{ fontFamily: 'var(--mono)', color: 'var(--green)', fontSize: 12 }}>{String(v)}</span>
                 </div>
               ))}
-
-              <div style={{ marginTop: 12 }}>
-                <div style={{ fontSize: 12, color: 'var(--text3)', marginBottom: 6 }}>devbox config</div>
-                <pre style={{
-                  background: 'var(--surface2)', padding: 10, borderRadius: 6,
-                  fontSize: 11, color: 'var(--text2)', fontFamily: 'var(--mono)',
-                  whiteSpace: 'pre-wrap', overflowX: 'auto',
-                }}>
-                  {config.data?.devboxConfig || 'N/A'}
-                </pre>
-              </div>
             </div>
           )}
         </Card>

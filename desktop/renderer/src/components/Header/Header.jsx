@@ -9,7 +9,7 @@ export default function Header({ agentCount, commandCount, activeCount, hasActiv
       <div className={styles.topRow}>
         <div className={styles.branding}>
           <span className={styles.title}>🤖 Agent Manager</span>
-          <span className={styles.subtitle}>devbox ai · claude</span>
+          <span className={styles.subtitle}>Claude Code</span>
         </div>
         <div className={styles.liveRow}>
           <PulseDot

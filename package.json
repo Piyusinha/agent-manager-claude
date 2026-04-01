@@ -1,7 +1,7 @@
 {
   "name": "agent-manager",
   "version": "1.0.0",
-  "description": "Web UI for managing Claude agents via devbox ai",
+  "description": "Web UI for managing Claude Code agents and sessions",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
