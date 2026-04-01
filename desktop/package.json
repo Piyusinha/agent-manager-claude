@@ -1,6 +1,6 @@
 {
   "name": "agent-manager-desktop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Agent Manager macOS menu bar app",
   "author": "Piyush Sinha",
   "main": "main.js",
