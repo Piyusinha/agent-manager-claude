@@ -10,6 +10,14 @@ const app = express();
 const PORT = 3001;
 const HOME = homedir();
 
+function npmGlobalNodeModules() {
+  try {
+    const root = execSync('npm root -g', { encoding: 'utf8', timeout: 5000 }).trim();
+    if (root) return root;
+  } catch { /* npm not on PATH or failed */ }
+  return path.join(HOME, 'node_modules');
+}
+
 app.use(cors());
 app.use(express.json());
 
@@ -79,7 +87,7 @@ app.get('/api/commands', async (_req, res) => {
 app.get('/api/sessions', (_req, res) => {
   try {
     const raw = execSync(
-      "ps aux | grep -E 'claude|devbox.*ai' | grep -v grep | grep -v 'agent-manager'",
+      "ps aux | grep -E 'claude' | grep -v grep | grep -v 'agent-manager'",
       { encoding: 'utf8', timeout: 5000 }
     );
     const sessions = raw
@@ -132,38 +140,34 @@ app.get('/api/skills', async (_req, res) => {
   res.json({ success: true, data: skills, count: skills.length });
 });
 
-// GET /api/config - devbox AI config info (read-only)
+// GET /api/config - Claude npm package versions (global install, read-only)
 app.get('/api/config', async (_req, res) => {
   const info = {};
-  try {
-    // Read actual installed versions from node_modules
-    const nmBase = path.join(HOME, '.devbox/ai/claude/node_modules');
-    for (const [key, pkg] of [
-      ['claudeVersion', '@anthropic-ai/claude-code'],
-      ['agentSdkVersion', '@anthropic-ai/claude-agent-sdk'],
-      ['acpVersion', '@agentclientprotocol/sdk'],
-    ]) {
-      try {
-        const p = JSON.parse(await fs.readFile(path.join(nmBase, pkg, 'package.json'), 'utf8'));
-        info[key] = p.version || 'unknown';
-      } catch { info[key] = 'unknown'; }
-    }
-  } catch { /* skip */ }
-
-  try {
-    const devboxCfg = await fs.readFile(path.join(HOME, '.devbox/config.yaml'), 'utf8');
-    info.devboxConfig = devboxCfg.trim();
-  } catch { /* skip */ }
-
+  const nmBase = npmGlobalNodeModules();
+  for (const [key, pkg] of [
+    ['claudeVersion', '@anthropic-ai/claude-code'],
+    ['agentSdkVersion', '@anthropic-ai/claude-agent-sdk'],
+    ['acpVersion', '@agentclientprotocol/sdk'],
+  ]) {
+    try {
+      const p = JSON.parse(await fs.readFile(path.join(nmBase, pkg, 'package.json'), 'utf8'));
+      info[key] = p.version || 'unknown';
+    } catch { info[key] = 'unknown'; }
+  }
   res.json({ success: true, data: info });
 });
 
-// GET /api/logs - recent Claude logs
-app.get('/api/logs', (_req, res) => {
+// GET /api/logs - recent logs from ~/.claude/logs if present
+app.get('/api/logs', async (_req, res) => {
+  const logDir = path.join(HOME, '.claude', 'logs');
   try {
-    const logDir = path.join(HOME, '.devbox/logs');
+    const st = await fs.stat(logDir);
+    if (!st.isDirectory()) {
+      res.json({ success: true, data: [] });
+      return;
+    }
     const raw = execSync(
-      `ls -t ${logDir}/*.log 2>/dev/null | head -3 | xargs tail -n 50 2>/dev/null || echo "no logs"`,
+      `ls -t "${logDir}"/*.log 2>/dev/null | head -3 | xargs tail -n 50 2>/dev/null || true`,
       { encoding: 'utf8', timeout: 5000 }
     );
     res.json({ success: true, data: raw.split('\n').filter(Boolean).slice(-100) });

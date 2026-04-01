@@ -15,8 +15,8 @@ export default function Config() {
       {loading ? <Spinner /> : error ? <ErrorMsg msg={error} /> : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Card>
-            <h3 style={{ marginBottom: 14, fontSize: 15, fontWeight: 600 }}>Claude / devbox ai Versions</h3>
-            {Object.entries(config || {}).filter(([k]) => k !== 'devboxConfig').map(([k, v]) => (
+            <h3 style={{ marginBottom: 14, fontSize: 15, fontWeight: 600 }}>Claude package versions</h3>
+            {Object.entries(config || {}).map(([k, v]) => (
               <div key={k} style={{
                 display: 'flex', justifyContent: 'space-between', padding: '8px 0',
                 borderBottom: '1px solid var(--border)', fontSize: 13,
@@ -27,27 +27,14 @@ export default function Config() {
             ))}
           </Card>
 
-          {config?.devboxConfig && (
-            <Card>
-              <h3 style={{ marginBottom: 12, fontSize: 15, fontWeight: 600 }}>Devbox Config</h3>
-              <pre style={{
-                background: 'var(--surface2)', padding: 14, borderRadius: 6,
-                fontSize: 12, color: 'var(--text2)', fontFamily: 'var(--mono)',
-                whiteSpace: 'pre-wrap',
-              }}>
-                {config.devboxConfig}
-              </pre>
-            </Card>
-          )}
-
           <Card>
             <h3 style={{ marginBottom: 12, fontSize: 15, fontWeight: 600 }}>Key Paths</h3>
             {[
               ['Agents', '~/.claude/agents/'],
               ['Commands', '~/.claude/commands/'],
               ['Rules', '~/.claude/rules/'],
-              ['devbox AI', '~/.devbox/ai/claude/'],
-              ['Agent config', '~/.devbox/ai/claude/agent/devbox/devbox.yml'],
+              ['Projects / sessions', '~/.claude/projects/'],
+              ['Skills', '~/.claude/skills/'],
             ].map(([label, p]) => (
               <div key={label} style={{
                 display: 'flex', justifyContent: 'space-between', padding: '8px 0',

@@ -94,7 +94,7 @@ export default function Sessions() {
       <Card>
         {loading ? <Spinner /> : error ? <ErrorMsg msg={error} /> : sessions?.length === 0 ? (
           <div style={{ color: 'var(--text3)', textAlign: 'center', padding: 40, fontSize: 15 }}>
-            No active Claude / devbox processes found.
+            No active Claude processes found.
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
