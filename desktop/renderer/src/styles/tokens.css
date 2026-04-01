@@ -55,4 +55,9 @@
   --overlay-scrim: rgba(255, 255, 255, 0.35);
   --on-accent:     #ffffff;
   --playground-bg: #ececf2;
+
+  /* Opaque surfaces for list tabs — avoids muddy transparency over the shell blur */
+  --panel-solid: rgba(252, 252, 254, 0.98);
+  --panel-muted: rgba(245, 245, 248, 1);
+  --row-hover:   rgba(0, 0, 0, 0.04);
 }

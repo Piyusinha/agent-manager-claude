@@ -344,14 +344,14 @@ export default function PlaygroundTab() {
   const active = agentData ? agentData.filter((a) => a.status !== 'Idle') : [];
 
   if (initErr) return (
-    <div className={styles.initErr}>
+    <div className={`${styles.initErr} playground`}>
       <span style={{ fontSize: 28 }}>⚠️</span>
       <span style={{ fontSize: 12 }}>{initErr}</span>
     </div>
   );
 
   return (
-    <div className={styles.root}>
+    <div className={`${styles.root} playground`}>
       <div ref={mountRef} className={styles.canvasHost} />
 
       <div className={styles.hud}>

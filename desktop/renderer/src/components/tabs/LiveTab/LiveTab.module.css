@@ -16,7 +16,7 @@
   transition: background 0.12s;
   border-radius: 0;
 }
-.rowMain:hover { background: var(--surface); }
+.rowMain:hover { background: var(--row-hover); }
 
 .project {
   font-size: 12px;

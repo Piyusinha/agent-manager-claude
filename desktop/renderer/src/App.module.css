@@ -25,7 +25,12 @@
   position: relative;
 }
 
-/* Playground needs the full content area — no scroll */
-.content:has(.playground) {
+/* Solid sheet under list tabs (not Office / 3D) — keeps rows readable on light mode */
+.content > :global(:not(.playground)) {
+  background: var(--panel-solid);
+  min-height: 100%;
+}
+
+.content:has(> :global(.playground)) {
   overflow: hidden;
 }
