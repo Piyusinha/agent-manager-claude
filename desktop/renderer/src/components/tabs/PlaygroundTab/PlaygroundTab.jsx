@@ -30,6 +30,10 @@ const BODY_COLORS = [0xe06c75, 0x61afef, 0x98c379, 0xe5c07b, 0xc678dd, 0x56b6c2]
 const DEFAULT_CAM_POS  = new THREE.Vector3(2, 9, 13);
 const DEFAULT_CAM_LOOK = new THREE.Vector3(0, 1, 0);
 
+function playgroundSkyHex() {
+  return document.documentElement.dataset.theme === 'dark' ? 0x0a0d14 : 0xd8dde8;
+}
+
 // ── Geometry helpers ──────────────────────────────────────────────────────────
 const M  = (c) => new THREE.MeshStandardMaterial({ color: c });
 const Mb = (c) => new THREE.MeshBasicMaterial({ color: c });
@@ -185,7 +189,7 @@ export default function PlaygroundTab() {
       rendererRef.current = renderer;
 
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xd8dde8);
+      scene.background = new THREE.Color(playgroundSkyHex());
       sceneRef.current = scene;
 
       const camera = new THREE.PerspectiveCamera(52, w / h, 0.1, 500);
@@ -265,6 +269,15 @@ export default function PlaygroundTab() {
       console.error('Playground error:', err);
       setInitErr(err.message);
     }
+  }, []);
+
+  useEffect(() => {
+    const syncSky = () => {
+      const scene = sceneRef.current;
+      if (scene) scene.background = new THREE.Color(playgroundSkyHex());
+    };
+    window.addEventListener('agent-manager-theme', syncSky);
+    return () => window.removeEventListener('agent-manager-theme', syncSky);
   }, []);
 
   // ── Sync avatars with live data ───────────────────────────────────────────

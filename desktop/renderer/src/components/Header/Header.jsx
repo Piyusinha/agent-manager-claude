@@ -1,9 +1,17 @@
+import { useState, useEffect } from 'react';
 import PulseDot from '../ui/PulseDot.jsx';
+import { getThemePreference, setThemePreference } from '../../theme.js';
 import styles from './Header.module.css';
 
-const MODEL_COLORS = { opus: '#e5c07b', sonnet: '#528bff', haiku: '#98c379' };
-
 export default function Header({ agentCount, commandCount, activeCount, hasActive, onStatClick }) {
+  const [themePref, setThemePref] = useState(getThemePreference);
+
+  useEffect(() => {
+    const onTheme = () => setThemePref(getThemePreference());
+    window.addEventListener('agent-manager-theme', onTheme);
+    return () => window.removeEventListener('agent-manager-theme', onTheme);
+  }, []);
+
   return (
     <header className={styles.header}>
       <div className={styles.topRow}>
@@ -11,12 +19,33 @@ export default function Header({ agentCount, commandCount, activeCount, hasActiv
           <span className={styles.title}>🤖 Agent Manager</span>
           <span className={styles.subtitle}>Claude Code</span>
         </div>
-        <div className={styles.liveRow}>
-          <PulseDot
-            color={hasActive ? 'var(--green)' : 'var(--text3)'}
-            animate={hasActive}
-          />
-          <span className={styles.liveLabel}>{hasActive ? 'LIVE' : 'IDLE'}</span>
+        <div className={styles.topActions}>
+          <div className={styles.themeToggle} role="group" aria-label="Appearance">
+            {[
+              { id: 'system', label: 'Auto' },
+              { id: 'light', label: 'Light' },
+              { id: 'dark', label: 'Dark' },
+            ].map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                className={`${styles.themeBtn} ${themePref === id ? styles.themeBtnActive : ''}`}
+                onClick={() => {
+                  setThemePreference(id);
+                  setThemePref(id);
+                }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className={styles.liveRow}>
+            <PulseDot
+              color={hasActive ? 'var(--green)' : 'var(--text3)'}
+              animate={hasActive}
+            />
+            <span className={styles.liveLabel}>{hasActive ? 'LIVE' : 'IDLE'}</span>
+          </div>
         </div>
       </div>
 
