@@ -52,7 +52,7 @@ agent-manager/
 
 ### General
 - No hardcoded color values anywhere in component files. All colors go through CSS variables in `tokens.css`.
-- `tokens.css` uses `@media (prefers-color-scheme: light/dark)` blocks — never add a hardcoded light or dark color outside these blocks.
+- Desktop theme: `theme.js` + `localStorage` key `agent-manager-theme` (`system` default, `light`, `dark`). Sets `<html data-theme="light|dark">`. Tokens live in `html[data-theme='light']` / `html[data-theme='dark']` in `tokens.css`. Inline script in `desktop/renderer/index.html` mirrors bootstrap to avoid flash.
 - No inline style objects with color literals (`rgba(28,28,30,...)`) — use `'var(--token-name)'`.
 - Component files stay under ~400 lines. Extract helpers aggressively.
 - Functions under 50 lines.

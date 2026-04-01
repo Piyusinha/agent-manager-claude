@@ -16,7 +16,7 @@
   transition: background 0.12s;
   border-radius: 0;
 }
-.rowMain:hover { background: var(--surface); }
+.rowMain:hover { background: var(--row-hover); }
 
 .project {
   font-size: 12px;
@@ -121,10 +121,15 @@ details[open] .idleSummary::before { content: '▾ '; }
   padding: 8px;
   background: var(--accent-dim);
   color: var(--accent);
-  border: 1px solid rgba(82,139,255,0.3);
+  border: 1px solid var(--accent-border);
   border-radius: var(--radius-md);
   font-size: 12px;
   font-weight: 500;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  box-shadow: var(--glass-inner);
 }
-.spawnBtn:hover { background: rgba(82,139,255,0.25); }
+.spawnBtn:hover {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  box-shadow: var(--glass-inner), 0 0 16px var(--accent-dim);
+}

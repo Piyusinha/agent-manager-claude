@@ -1,15 +1,63 @@
 .header {
   padding: 14px 16px 12px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--glass-stroke);
+  background: linear-gradient(180deg, var(--glass-fill) 0%, transparent 100%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   flex-shrink: 0;
   -webkit-app-region: drag;
 }
 
 .topRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 8px;
   margin-bottom: 12px;
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+}
+
+.themeToggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--glass-fill);
+}
+
+.themeBtn {
+  padding: 3px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text3);
+  border: none;
+  border-right: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  line-height: 1.2;
+  transition: color 0.12s, background 0.12s;
+}
+
+.themeBtn:last-child {
+  border-right: none;
+}
+
+.themeBtn:hover {
+  color: var(--text2);
+  background: var(--row-hover);
+}
+
+.themeBtnActive {
+  color: var(--accent);
+  background: var(--accent-dim);
 }
 
 .branding {
@@ -34,7 +82,6 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  -webkit-app-region: no-drag;
 }
 
 .liveLabel {
@@ -56,15 +103,20 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 10px 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--glass-fill);
+  border: 1px solid var(--glass-stroke);
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--glass-shadow), var(--glass-inner);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 .tile:hover {
   border-color: var(--border-hover);
-  background: var(--surface2);
+  background: var(--glass-fill-2);
+  box-shadow: var(--glass-shadow), var(--glass-inner), 0 0 0 1px var(--accent-border);
+  transform: translateY(-1px);
 }
 
 .tileValue {
