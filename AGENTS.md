@@ -52,7 +52,7 @@ agent-manager/
 
 ### General
 - No hardcoded color values anywhere in component files. All colors go through CSS variables in `tokens.css`.
-- `tokens.css` uses `@media (prefers-color-scheme: light/dark)` blocks — never add a hardcoded light or dark color outside these blocks.
+- Desktop `tokens.css` is fixed **light** appearance (`color-scheme: light`); new tokens belong in `:root`, not per-scheme media blocks.
 - No inline style objects with color literals (`rgba(28,28,30,...)`) — use `'var(--token-name)'`.
 - Component files stay under ~400 lines. Extract helpers aggressively.
 - Functions under 50 lines.

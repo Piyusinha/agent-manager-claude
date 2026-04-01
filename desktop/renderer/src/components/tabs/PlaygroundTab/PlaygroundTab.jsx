@@ -185,7 +185,7 @@ export default function PlaygroundTab() {
       rendererRef.current = renderer;
 
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x0a0d14);
+      scene.background = new THREE.Color(0xd8dde8);
       sceneRef.current = scene;
 
       const camera = new THREE.PerspectiveCamera(52, w / h, 0.1, 500);
