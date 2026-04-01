@@ -156,7 +156,7 @@ npm run dev         # Electron + Vite HMR
 
 ```bash
 cd desktop
-npm run build       # vite build + electron-builder --mac → dist/*.dmg
+npm run build       # vite build + electron-builder --mac → dist-app/*-arm64.dmg + *-x64.dmg
 ```
 
 ## Testing the server independently
