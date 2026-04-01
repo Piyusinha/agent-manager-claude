@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { useFetch } from '../../../hooks/useFetch.js';
 import { fetchAgentStatus, focusTerminal } from '../../../api/client.js';
+import styles from './PlaygroundTab.module.css';
 
 // ── Status → visual config ────────────────────────────────────────────────────
 const STATUS_VIS = {
@@ -184,7 +185,7 @@ export default function PlaygroundTab() {
       rendererRef.current = renderer;
 
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x111827);
+      scene.background = new THREE.Color(0x0a0d14);
       sceneRef.current = scene;
 
       const camera = new THREE.PerspectiveCamera(52, w / h, 0.1, 500);
@@ -343,80 +344,60 @@ export default function PlaygroundTab() {
   const active = agentData ? agentData.filter((a) => a.status !== 'Idle') : [];
 
   if (initErr) return (
-    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100%', flexDirection:'column', gap:10, color:'var(--red)' }}>
-      <span style={{ fontSize:28 }}>⚠️</span>
-      <span style={{ fontSize:12 }}>{initErr}</span>
+    <div className={styles.initErr}>
+      <span style={{ fontSize: 28 }}>⚠️</span>
+      <span style={{ fontSize: 12 }}>{initErr}</span>
     </div>
   );
 
   return (
-    <div style={{ position:'relative', width:'100%', height:'100%', overflow:'hidden', background:'#111827' }}>
-      <div ref={mountRef} style={{ position:'absolute', inset:0 }} />
+    <div className={styles.root}>
+      <div ref={mountRef} className={styles.canvasHost} />
 
-      {/* Compact HUD */}
-      <div style={{
-        position:'absolute', top:10, left:10, zIndex:10,
-        background:'var(--surface)',
-        backdropFilter:'blur(20px) saturate(1.6)',
-        WebkitBackdropFilter:'blur(20px) saturate(1.6)',
-        borderRadius:12, padding:'8px 12px',
-        border:'1px solid var(--border-hover)',
-        boxShadow:'var(--shadow-card), var(--inset-shine)',
-        minWidth:170, maxWidth:190,
-      }}>
-        <div style={{ fontSize:11, fontWeight:700, color:'var(--red)', marginBottom:6 }}>🏢 Agent HQ</div>
-        {active.length === 0
-          ? <div style={{ fontSize:10, color:'var(--text3)' }}>No active agents</div>
-          : active.map((a, i) => {
-              const vis = getVis(a.status);
-              return (
-                <div key={a.sessionId+i} style={{ display:'flex', alignItems:'center', gap:6, marginBottom:5 }}>
-                  <span style={{ width:8, height:8, borderRadius:2, background:vis.hex, flexShrink:0, boxShadow:`0 0 5px ${vis.hex}66` }} />
-                  <div style={{ fontSize:10, overflow:'hidden' }}>
-                    <div style={{ color:'var(--text)', fontWeight:600, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', maxWidth:110 }}>{a.project}</div>
-                    <div style={{ color:vis.hex }}>{a.status}</div>
-                  </div>
+      <div className={styles.hud}>
+        <div className={styles.hudTitle}>🏢 Agent HQ</div>
+        {active.length === 0 ? (
+          <div style={{ fontSize: 10, color: 'var(--text3)' }}>No active agents</div>
+        ) : (
+          active.map((a, i) => {
+            const vis = getVis(a.status);
+            return (
+              <div key={a.sessionId + i} className={styles.hudRow}>
+                <span
+                  className={styles.hudDot}
+                  style={{
+                    background: vis.hex,
+                    boxShadow: `0 0 8px ${vis.hex}88`,
+                  }}
+                />
+                <div style={{ fontSize: 10, overflow: 'hidden' }}>
+                  <div className={styles.hudProject}>{a.project}</div>
+                  <div className={styles.hudStatus} style={{ color: vis.hex }}>{a.status}</div>
                 </div>
-              );
-            })
-        }
-        <div style={{ marginTop:5, borderTop:'1px solid var(--border)', paddingTop:5, fontSize:9, color:'var(--text3)' }}>
-          drag · scroll zoom · right pan
-        </div>
+              </div>
+            );
+          })
+        )}
+        <div className={styles.hudHint}>drag · scroll zoom · right pan</div>
       </div>
 
-      {/* Permission popup */}
       {popups.map((agent) => (
-        <div key={agent.sessionId} style={{
-          position:'absolute', bottom:16, left:'50%', transform:'translateX(-50%)',
-          zIndex:30, width:220,
-          background:'var(--surface2)',
-          backdropFilter:'blur(24px) saturate(1.6)',
-          WebkitBackdropFilter:'blur(24px) saturate(1.6)',
-          border:'1px solid var(--border-hover)',
-          borderRadius:14,
-          padding:'13px 15px',
-          boxShadow:'var(--shadow-window), var(--inset-shine)',
-          animation:'permPulse 2s ease-in-out infinite',
-        }}>
-          <div style={{ fontSize:11, fontWeight:700, color:'var(--red)', marginBottom:6, display:'flex', alignItems:'center', gap:5 }}>
-            🔐 Needs permission
-          </div>
-          <div style={{ fontSize:11, color:'var(--text2)', lineHeight:1.6, marginBottom:9 }}>
-            <span style={{ color:'var(--text)', fontWeight:600 }}>{agent.project}</span>
+        <div key={agent.sessionId} className={styles.popup}>
+          <div className={styles.popupTitle}>🔐 Needs permission</div>
+          <div className={styles.popupBody}>
+            <span className={styles.popupProject}>{agent.project}</span>
             {agent.lastTool && (
-              <> wants to run <code style={{ color:'var(--yellow)', fontSize:10, background:'var(--surface)', borderRadius:3, padding:'1px 4px' }}>{agent.lastTool}</code></>
+              <>
+                {' '}
+                wants to run{' '}
+                <code className={styles.popupCode}>{agent.lastTool}</code>
+              </>
             )}
           </div>
           <button
+            type="button"
+            className={styles.popupBtn}
             onClick={() => focusTerminal(agent.cwd).catch(() => {})}
-            style={{
-              width:'100%', padding:'6px 0',
-              background:'var(--surface)',
-              border:'1px solid var(--border-hover)',
-              borderRadius:8, fontSize:11, fontWeight:600,
-              color:'var(--text)', cursor:'pointer',
-            }}
           >
             ↗ Open Terminal
           </button>
@@ -424,14 +405,12 @@ export default function PlaygroundTab() {
       ))}
 
       {active.length === 0 && (
-        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', zIndex:5, pointerEvents:'none' }}>
-          <div style={{ fontSize:40, marginBottom:8 }}>😴</div>
-          <div style={{ fontSize:13, color:'var(--text2)', fontWeight:700 }}>Office is empty</div>
-          <div style={{ fontSize:11, color:'var(--text3)', marginTop:4 }}>Start a Claude session to see agents appear</div>
+        <div className={styles.empty}>
+          <div className={styles.emptyEmoji}>😴</div>
+          <div className={styles.emptyTitle}>Office is empty</div>
+          <div className={styles.emptySub}>Start a Claude session to see agents appear</div>
         </div>
       )}
-
-      <style>{`@keyframes permPulse { 0%,100%{opacity:1} 50%{opacity:0.82} }`}</style>
     </div>
   );
 }

@@ -1,8 +1,10 @@
 .tabBar {
   display: flex;
   padding: 0 10px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: var(--glass-fill);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-bottom: 1px solid var(--glass-stroke);
   flex-shrink: 0;
   gap: 2px;
 }
@@ -27,6 +29,7 @@
 .tab.active {
   color: var(--accent);
   border-bottom-color: var(--accent);
+  text-shadow: 0 0 20px var(--accent-dim);
 }
 
 .icon { font-size: 15px; line-height: 1; }
@@ -37,7 +40,7 @@
   top: 5px;
   right: calc(50% - 16px);
   background: var(--red);
-  color: #fff;
+  color: var(--on-accent);
   font-size: 9px;
   font-weight: 700;
   min-width: 15px;

@@ -1,9 +1,11 @@
 .searchBar {
   padding: 9px 12px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--glass-stroke);
   position: sticky;
   top: 0;
-  background: var(--bg);
+  background: var(--glass-fill);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   z-index: 1;
 }
 
