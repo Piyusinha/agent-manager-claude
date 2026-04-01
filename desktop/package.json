@@ -1,0 +1,25 @@
+{
+  "name": "agent-manager-desktop",
+  "version": "1.0.0",
+  "description": "Agent Manager macOS menu bar app",
+  "author": "Piyush Sinha",
+  "main": "main.js",
+  "scripts": {
+    "dev": "NODE_ENV=development concurrently -n electron,vite -c cyan,magenta \"electron .\" \"vite\"",
+    "renderer:build": "vite build",
+    "build": "npm run renderer:build && electron-builder --mac",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "vite": "^6.2.1"
+  },
+  "dependencies": {
+    "three": "^0.183.2"
+  }
+}

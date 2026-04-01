@@ -1,0 +1,28 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+
+# Desktop / Electron — never commit packaged apps or installers (regenerate with build-mac.sh)
+desktop/dist-app/
+desktop/renderer/dist/
+*.dmg
+*.blockmap
+**/builder-debug.yml
+**/builder-effective-config.yaml
+
+# Caches & local env
+.vite/
+.cache/
+.env
+.env.*
+!.env.example
+
+# Debug / coverage (workspace convention)
+.debug/
+coverage/
+
+# OS / IDE
+Thumbs.db
+*.swp
+.idea/

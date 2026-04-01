@@ -1,0 +1,68 @@
+.searchBar {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 1;
+}
+
+.item { border-bottom: 1px solid var(--border); }
+
+.itemRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  text-align: left;
+  transition: background 0.12s;
+  border-radius: 0;
+}
+.itemRow:hover { background: var(--surface); }
+
+.itemLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+}
+
+.cmdName {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.cmdDesc {
+  font-size: 11px;
+  color: var(--text2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chevron {
+  font-size: 12px;
+  color: var(--text3);
+  flex-shrink: 0;
+  width: 10px;
+}
+
+.body {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text2);
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+  padding: 8px 14px;
+  white-space: pre-wrap;
+  max-height: 110px;
+  overflow-y: auto;
+  line-height: 1.5;
+  animation: fadeIn 0.15s ease;
+}

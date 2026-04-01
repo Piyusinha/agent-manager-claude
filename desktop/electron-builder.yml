@@ -1,0 +1,41 @@
+appId: com.agentmanager.desktop
+productName: Agent Manager
+
+directories:
+  output: dist-app
+
+mac:
+  category: public.app-category.developer-tools
+  icon: assets/icon.icns
+  target:
+    - target: dmg
+      arch: [arm64]
+  extendInfo:
+    NSRequiresAquaSystemAppearance: false   # respect dark mode
+
+dmg:
+  title: "Agent Manager"
+  background: null
+  window:
+    width: 540
+    height: 380
+
+publish: null
+
+files:
+  - main.js
+  - preload.js
+  - assets/**/*
+  - renderer/dist/**/*
+
+# Bundle the Express server + its deps into Resources/
+extraResources:
+  - from: ../server
+    to: server
+  - from: ../node_modules
+    to: node_modules
+    filter:
+      - "**/*"
+      - "!**/.cache/**"
+      - "!**/electron/**"
+      - "!**/electron-builder/**"

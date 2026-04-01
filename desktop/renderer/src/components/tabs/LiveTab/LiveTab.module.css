@@ -1,0 +1,130 @@
+.tab { display: flex; flex-direction: column; height: 100%; }
+
+/* Agent row */
+.agentRow {
+  border-bottom: 1px solid var(--border);
+  animation: fadeIn 0.2s ease;
+}
+
+.rowMain {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 10px 14px;
+  text-align: left;
+  transition: background 0.12s;
+  border-radius: 0;
+}
+.rowMain:hover { background: var(--surface); }
+
+.project {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  flex-shrink: 0;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.branch {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--teal);
+  flex-shrink: 0;
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sessionId {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+
+.time {
+  font-size: 10px;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+
+.status {
+  font-size: 11px;
+  margin-left: auto;
+  flex-shrink: 0;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Expanded detail */
+.rowDetail {
+  padding: 6px 14px 10px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detailRow {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+}
+
+.detailKey {
+  color: var(--text3);
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.detailVal {
+  font-family: var(--mono);
+  color: var(--text2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Idle group */
+.idleGroup {
+  border-bottom: 1px solid var(--border);
+}
+
+.idleSummary {
+  padding: 8px 14px;
+  font-size: 11px;
+  color: var(--text3);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.idleSummary:hover { color: var(--text2); }
+.idleSummary::-webkit-details-marker { display: none; }
+.idleSummary::before { content: '▸ '; font-size: 9px; }
+details[open] .idleSummary::before { content: '▾ '; }
+
+/* Footer */
+.footer {
+  margin-top: auto;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+}
+
+.spawnBtn {
+  width: 100%;
+  padding: 8px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid rgba(82,139,255,0.3);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+.spawnBtn:hover { background: rgba(82,139,255,0.25); }
