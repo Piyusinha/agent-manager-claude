@@ -17,6 +17,7 @@ export const fetchAgents      = () => req('/api/agents');
 export const fetchCommands    = () => req('/api/commands');
 export const fetchSessions    = () => req('/api/sessions');
 export const fetchAgentStatus = () => req('/api/agent-status');
+export const fetchSessionPast = () => req('/api/session-past');
 export const fetchMcp         = () => req('/api/mcp');
 export const fetchConfig      = () => req('/api/config');
 

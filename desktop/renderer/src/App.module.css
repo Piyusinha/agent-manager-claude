@@ -26,9 +26,18 @@
 }
 
 /* Solid sheet under list tabs (not Office / 3D) — keeps rows readable on light mode */
-.content > :global(:not(.playground)) {
+.content > :global(:not(.playground):not(.pastTab)) {
   background: var(--panel-solid);
   min-height: 100%;
+}
+
+/* Past tab: fixed viewport; inner list scrolls (grid + line-clamp need a bounded height) */
+.content > :global(.pastTab) {
+  background: var(--panel-solid);
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .content:has(> :global(.playground)) {

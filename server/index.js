@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs/promises';
-import { writeFileSync, unlinkSync } from 'fs';
+import { writeFileSync, unlinkSync, createReadStream } from 'fs';
+import readline from 'readline';
 import path from 'path';
 import { execSync, spawn } from 'child_process';
 import { homedir } from 'os';
@@ -213,6 +214,106 @@ async function findJsonlFiles(dir, depth = 0) {
   } catch {}
   return files;
 }
+
+function bashSingleQuoted(s) {
+  return `'${String(s).replace(/'/g, "'\\''")}'`;
+}
+
+function jsonlContentToPlainText(content) {
+  if (content == null) return '';
+  if (typeof content === 'string') return content;
+  if (!Array.isArray(content)) return '';
+  return content
+    .map((part) => {
+      if (typeof part === 'string') return part;
+      if (part && typeof part === 'object' && typeof part.text === 'string') return part.text;
+      return '';
+    })
+    .join('')
+    .trim();
+}
+
+function jsonlLineIsUser(obj) {
+  if (obj.type === 'user') return true;
+  if (obj.role === 'user') return true;
+  if (obj.message?.role === 'user') return true;
+  return false;
+}
+
+async function scanJsonlHeadForMeta(filePath, maxLines = 400) {
+  const stream = createReadStream(filePath, { encoding: 'utf8' });
+  const rl = readline.createInterface({ input: stream, crlfDelay: Infinity });
+  let lineNum = 0;
+  let cwd = null;
+  let title = null;
+  try {
+    for await (const line of rl) {
+      lineNum++;
+      if (lineNum > maxLines) break;
+      if (!line.trim()) continue;
+      let obj;
+      try { obj = JSON.parse(line); } catch { continue; }
+      if (obj.cwd && !cwd) cwd = obj.cwd;
+      if (!title && jsonlLineIsUser(obj)) {
+        const raw = jsonlContentToPlainText(obj.message?.content ?? obj.content);
+        if (raw) {
+          const t = raw.replace(/\s+/g, ' ').trim();
+          if (t) title = t.length > 100 ? `${t.slice(0, 100)}…` : t;
+        }
+      }
+      if (cwd && title) break;
+    }
+  } finally {
+    rl.close();
+    stream.destroy();
+  }
+  return { cwd, title };
+}
+
+// GET /api/session-past — archived JSONL sessions (title + resume)
+app.get('/api/session-past', async (_req, res) => {
+  const projectsDir = path.join(HOME, '.claude/projects');
+  const sub = `${path.sep}subagents${path.sep}`;
+  const allFiles = (await findJsonlFiles(projectsDir)).filter((f) => !f.includes(sub));
+
+  const withStat = await Promise.all(
+    allFiles.map(async (filePath) => {
+      try {
+        const stat = await fs.stat(filePath);
+        return { filePath, mtimeMs: stat.mtimeMs };
+      } catch {
+        return null;
+      }
+    }),
+  );
+  const sorted = withStat
+    .filter(Boolean)
+    .sort((a, b) => b.mtimeMs - a.mtimeMs)
+    .slice(0, 300);
+
+  const BATCH = 12;
+  const rows = [];
+  for (let i = 0; i < sorted.length; i += BATCH) {
+    const chunk = sorted.slice(i, i + BATCH);
+    const part = await Promise.all(
+      chunk.map(async ({ filePath, mtimeMs }) => {
+        const sessionId = path.basename(filePath, '.jsonl');
+        const { cwd, title } = await scanJsonlHeadForMeta(filePath);
+        return {
+          sessionId,
+          cwd,
+          project: cwd ? path.basename(cwd) : path.basename(path.dirname(filePath)),
+          lastActiveMs: mtimeMs,
+          title: title || '(No first user message)',
+        };
+      }),
+    );
+    rows.push(...part);
+  }
+
+  rows.sort((a, b) => b.lastActiveMs - a.lastActiveMs);
+  res.json({ success: true, data: rows });
+});
 
 // GET /api/agent-status - live status parsed from JSONL logs
 app.get('/api/agent-status', async (_req, res) => {
@@ -456,12 +557,17 @@ app.delete('/api/sessions/:pid', (req, res) => {
 
 // POST /api/sessions/spawn — open Terminal.app with claude in a directory
 app.post('/api/sessions/spawn', (req, res) => {
-  const { cwd, prompt } = req.body;
+  const { cwd, prompt, resumeSessionId } = req.body;
   if (!cwd) return res.status(400).json({ success: false, error: 'cwd is required' });
   try {
-    const claudeCmd = prompt
-      ? `cd '${cwd}' && claude --print '${prompt.replace(/'/g, "\\'")}'`
-      : `cd '${cwd}' && claude`;
+    let claudeCmd;
+    if (resumeSessionId) {
+      claudeCmd = `cd ${bashSingleQuoted(cwd)} && claude --resume ${bashSingleQuoted(resumeSessionId)}`;
+    } else if (prompt) {
+      claudeCmd = `cd '${cwd}' && claude --print '${prompt.replace(/'/g, "\\'")}'`;
+    } else {
+      claudeCmd = `cd '${cwd}' && claude`;
+    }
     const child = spawn('osascript', [
       '-e',
       `tell application "Terminal" to do script "${claudeCmd.replace(/"/g, '\\"')}"`,

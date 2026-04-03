@@ -8,9 +8,17 @@ import PlaygroundTab from './components/tabs/PlaygroundTab/PlaygroundTab.jsx';
 import AgentsTab from './components/tabs/AgentsTab/AgentsTab.jsx';
 import CommandsTab from './components/tabs/CommandsTab/CommandsTab.jsx';
 import McpTab from './components/tabs/McpTab/McpTab.jsx';
+import PastTab from './components/tabs/PastTab/PastTab.jsx';
 import styles from './App.module.css';
 
-const TABS = { live: LiveTab, playground: PlaygroundTab, agents: AgentsTab, commands: CommandsTab, mcp: McpTab };
+const TABS = {
+  live: LiveTab,
+  playground: PlaygroundTab,
+  past: PastTab,
+  agents: AgentsTab,
+  commands: CommandsTab,
+  mcp: McpTab,
+};
 
 export default function App() {
   const [tab, setTab] = useState('live');

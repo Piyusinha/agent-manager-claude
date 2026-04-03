@@ -3,6 +3,7 @@ import styles from './TabBar.module.css';
 const TABS = [
   { id: 'live',       icon: '●',  label: 'Live'       },
   { id: 'playground', icon: '🏢', label: 'Office'     },
+  { id: 'past',       icon: '📜', label: 'Past'       },
   { id: 'agents',     icon: '🤖', label: 'Agents'     },
   { id: 'commands',   icon: '⚡', label: 'Commands'   },
   { id: 'mcp',        icon: '🔌', label: 'MCP'        },
