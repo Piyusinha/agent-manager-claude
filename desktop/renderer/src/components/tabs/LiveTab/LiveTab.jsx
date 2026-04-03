@@ -43,7 +43,7 @@ export default function LiveTab() {
 
       <div className={styles.footer}>
         <button className={styles.spawnBtn} onClick={() => setShowSpawn(true)}>
-          + New Session
+          + New Agent
         </button>
       </div>
 
